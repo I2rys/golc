@@ -1,41 +1,32 @@
-//Dependencies
-const Axios = require("axios")
+"use strict";
 
-//Variables
-var Self_Args = process.argv.slice(2)
+// Dependencies
+const axios = require("axios")
 
-//Main
-if(!Self_Args.length){
-    console.log("node index.js <account_token> <organization_name> <location>")
-    process.exit()
-}
+// Variables
+var args = process.argv.slice(2)
 
-if(!Self_Args[1]){
-    console.log("Invalid organization_name.")
-    process.exit()
-}
+// Main
+if(!args.length) return console.log("node index.js <accountToken> <organizationName> <location>")
+if(!args[1]) return console.log("Invalid organization_name.")
+if(!args[2]) return console.log("Invalid location.")
 
-if(!Self_Args[2]){
-    console.log("Invalid location.")
-    process.exit()
-}
-
-Self_Args[2] = Self_Args.slice(2).join(" ")
+args[2] = args.slice(2).join(" ")
 
 void async function Main(){
     try{
-        await Axios({
+        await axios({
             method: "POST",
-            url: `https://api.github.com/orgs/${Self_Args[1]}`,
+            url: `https://api.github.com/orgs/${args[1]}`,
             headers:{
                 "content-type": "application/json",
-                authorization: `token ${Self_Args[0]}`
+                authorization: `token ${args[0]}`
             },
-            data: { location: Self_Args[2] }
+            data: { location: args[2] }
         })
 
-        console.log(`Organization location successfully changed to ${Self_Args[2]}`)
+        console.log(`Organization location successfully changed to ${args[2]}`)
     }catch{
-        console.log("Please make sure the account_token(Has a high permission), organization_name and location is valid.")
+        console.log("Please make sure the accountToken(Has a high permission), organizationName and location are valid.")
     }
 }()
